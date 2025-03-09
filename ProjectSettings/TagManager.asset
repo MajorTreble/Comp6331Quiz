@@ -3,7 +3,18 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Rock
+  - Scissors
+  - Paper
+  - Lizard
+  - Spock
+  - GameManager
+  - Rocks
+  - Scissorss
+  - Papers
+  - Lizards
+  - Spocks
   layers:
   - Default
   - TransparentFX

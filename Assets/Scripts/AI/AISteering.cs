@@ -6,7 +6,6 @@ namespace AI
 {
     public class AISteering : MonoBehaviour
     {
-        public bool enabled = true;
 
         public float initialMaxSpeed;
         public float maxSpeed;
