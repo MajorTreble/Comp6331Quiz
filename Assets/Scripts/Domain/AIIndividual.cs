@@ -21,6 +21,7 @@ namespace Domain
         public float rangeDefeat = 6.0f;
 
         public bool isDefeated = false;
+        protected bool isGameOver = false;
 
         protected AIIndividual targetUnit;
 
@@ -29,6 +30,7 @@ namespace Domain
         void Start()
         {
             isDefeated = false;
+            isGameOver = false;
 
             behavior = EBehaviorType.Idle;
             EnterIdle();
@@ -46,6 +48,11 @@ namespace Domain
         private void UpdatePerception()
         {
             targetUnit = null;
+
+            if (isGameOver)
+			{
+                return;
+			}
 
             // Flee first
             float closeDistance = 99999.0f;
@@ -175,6 +182,18 @@ namespace Domain
             }
 
         }
+
+        public void SetSpeed(float speed)
+        {
+            steering.maxSpeed = speed;
+        }
+
+        public void GameOver()
+		{
+            isGameOver = true;
+
+            requestBehavior = EBehaviorType.Idle;
+		}
 
         public void Defeat()
 		{

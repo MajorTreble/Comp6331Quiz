@@ -21,6 +21,8 @@ namespace Domain
 
         protected List<AIGroup> groups;
 
+        protected bool isGameOver = false;
+
         public void Awake()
 		{
             groups = new List<AIGroup>();
@@ -68,21 +70,31 @@ namespace Domain
 
         protected void UpdateWinCondition()
 		{
+            if (isGameOver)
+			{
+                return;
+			}
+
             foreach(AIGroup group in groups)
 			{
-                bool isAlive = false;
-                foreach(AIIndividual unit in group.enemyUnits)
+                if (group.IsDefeated())
 				{
-                    if (!unit.isDefeated)
-					{
-                        isAlive = true;
-					}
-				}
-                if (!isAlive)
-				{
-                    Debug.Log(group.tag + " Wins");
+                    GameOver(group);
+                    return;
                 }
             }
 		}
+
+        protected void GameOver(AIGroup lostGroup)
+		{
+            isGameOver = true;
+
+            Debug.Log(lostGroup.tag + " Loses");
+
+            foreach (AIGroup group in groups)
+            {
+                group.GameOver();
+            }
+        }
     }
 }

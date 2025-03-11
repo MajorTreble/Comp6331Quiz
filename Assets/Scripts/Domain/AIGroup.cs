@@ -13,7 +13,13 @@ namespace Domain
         public List<AIIndividual> enemyUnits;
         public List<AIIndividual> targetUnits;
 
-        string factionStr;
+        public float speedCalm = 2.0f;
+        public float speedAverage = 6.0f;
+        public float speedAggressive = 10.0f;
+
+        public enum EAgressivenessType { Calm, Average, Aggressive };
+
+        protected string factionStr;
 
         void Start()
         {
@@ -44,6 +50,53 @@ namespace Domain
                 }
             }
         }
+
+        public void Update()
+		{
+            UpdateAgressiveness();
+		}
+
+        protected void UpdateAgressiveness()
+        {
+        }
+
+        public bool IsDefeated()
+		{
+            bool isAlive = false;
+            foreach (AIIndividual unit in friendUnits)
+            {
+                if (!unit.isDefeated)
+                {
+                    isAlive = true;
+                }
+            }
+            return !isAlive;
+        }
+
+        public void GameOver()
+		{
+            foreach (AIIndividual unit in friendUnits)
+			{
+                unit.GameOver();
+			}
+        }
+
+        protected void SetAgressiveness(EAgressivenessType type)
+		{
+            float speed = 0.0f;
+            switch (type)
+			{
+                case EAgressivenessType.Calm:
+                    speed = speedCalm;
+                    break;
+                case EAgressivenessType.Aggressive:
+                    speed = speedAggressive;
+                    break;
+                case EAgressivenessType.Average:
+                    speed = speedAverage;
+                    break;
+			}
+		}
 
         public void DebugDraw()
 		{
