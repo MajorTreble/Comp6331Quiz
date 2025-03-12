@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7780364136362791947}
   - component: {fileID: 8255435632367419132}
   - component: {fileID: 6627878489113617673}
+  - component: {fileID: 1796482166153129332}
   m_Layer: 0
   m_Name: AI Unit
   m_TagString: Untagged
@@ -76,7 +77,6 @@ MonoBehaviour:
   rangePerceptionFlee: 7.5
   rangeDefeat: 6
   isDefeated: 0
-  isGameOver: 0
   closeEnemyDistance: 99999
   closeEnemyUnit: {fileID: 0}
   closeTargetDistance: 99999
@@ -102,6 +102,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 3
+--- !u!114 &1796482166153129332
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4016918204487270451}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef4d42c6796cc044db7c462ddd5ff8f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  unit: {fileID: 8255435632367419132}
 --- !u!1 &8874864920847648527
 GameObject:
   m_ObjectHideFlags: 0

@@ -48,6 +48,8 @@ namespace Domain
 
         protected GameObject[] obstacles;
 
+        protected UnitBT tree;
+
         void Start()
         {
             gameManager = GameObject.FindWithTag("GameManager").GetComponent<GameManager>();

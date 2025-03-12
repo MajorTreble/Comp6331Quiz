@@ -57,15 +57,22 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\Domain\AIIndividual.cs" />
+    <Compile Include="Assets\Scripts\Domain\TaskWander.cs" />
+    <Compile Include="Assets\Scripts\Domain\TaskChase.cs" />
     <Compile Include="Assets\Scripts\Domain\FactionRelation.cs" />
     <Compile Include="Assets\Scripts\AI\FaceAway.cs" />
     <Compile Include="Assets\Scripts\AI\AIMovement.cs" />
+    <Compile Include="Assets\Scripts\BehaviorTree\Selector.cs" />
     <Compile Include="Assets\Scripts\AI\Seek.cs" />
     <Compile Include="Assets\Scripts\AI\LookWhereYouAreGoing.cs" />
+    <Compile Include="Assets\Scripts\Domain\TaskFlee.cs" />
     <Compile Include="Assets\Scripts\AI\Flee.cs" />
     <Compile Include="Assets\Scripts\AI\CollisionAvoidance.cs" />
+    <Compile Include="Assets\Scripts\BehaviorTree\Sequence.cs" />
     <Compile Include="Assets\Scripts\Debug\DebugUtil.cs" />
+    <Compile Include="Assets\Scripts\BehaviorTree\Tree.cs" />
     <Compile Include="Assets\Scripts\AI\Evade.cs" />
+    <Compile Include="Assets\Scripts\BehaviorTree\Node.cs" />
     <Compile Include="Assets\Scripts\Controller\MenuController.cs" />
     <Compile Include="Assets\Scripts\Domain\AIGroup.cs" />
     <Compile Include="Assets\Scripts\AI\Pursue.cs" />
@@ -75,6 +82,7 @@
     <Compile Include="Assets\Scripts\AI\SteeringOutput.cs" />
     <Compile Include="Assets\Scripts\Controller\SimpleCameraController.cs" />
     <Compile Include="Assets\Scripts\AI\Wander.cs" />
+    <Compile Include="Assets\Scripts\Domain\UnitBT.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
