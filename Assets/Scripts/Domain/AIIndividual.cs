@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 using AI;
 
@@ -8,6 +9,8 @@ namespace Domain
 {
     public class AIIndividual : MonoBehaviour
     {
+        protected GameManager gameManager;
+
         public AISteering steering;
 
         public enum EBehaviorType { Idle, Wander, Flee, Chase }
@@ -17,79 +20,100 @@ namespace Domain
 
         public AIGroup group;
 
-        public float rangePerception = 30.0f;
+        public float rangePerception = 5.0f;
+        public float rangePerceptionFlee = 7.5f;
         public float rangeDefeat = 6.0f;
 
         public bool isDefeated = false;
-        protected bool isGameOver = false;
 
-        protected AIIndividual targetUnit;
+        public float closeEnemyDistance = 99999.0f;
+        public AIIndividual closeEnemyUnit = null;
+
+        public float closeTargetDistance = 99999.0f;
+        public AIIndividual closeTargetUnit = null;
+
+        public AIIndividual targetUnit = null;
+
+        public float boostTimer = 0;
+        public float depletedTimer = 0;
+
+        public Vector3 deathCenter = Vector3.zero;
+        public float deathRadius = 75.0f;
+
+        protected CollisionAvoidance avoidance;
+        protected Wander wander;
+        protected Seek seek;
 
         protected Color debugColor;
 
+        protected GameObject[] obstacles;
+
         void Start()
         {
+            gameManager = GameObject.FindWithTag("GameManager").GetComponent<GameManager>();
+
             isDefeated = false;
-            isGameOver = false;
 
             behavior = EBehaviorType.Idle;
             EnterIdle();
 
             requestBehavior = initialBehavior;
+
+            obstacles = GameObject.FindGameObjectsWithTag("Obstacle");
         }
 
 
         private void Update()
         {
+            if (!gameManager.isGameStarted || gameManager.isGamePaused || gameManager.isGameOver)
+			{
+                steering.enabled = false;
+                return;
+			}
+
+            if (isDefeated)
+            {
+                targetUnit = null;
+                steering.trackedTarget = null;
+                return;
+            }
+
+            steering.enabled = true;
+
             UpdatePerception();
+            UpdateDecision();
             UpdateBehaviour();
+            UpdateRadius();
         }
 
         private void UpdatePerception()
         {
-            targetUnit = null;
-
-            if (isGameOver)
+            if (targetUnit && targetUnit.isDefeated)
 			{
-                return;
+                targetUnit = null;
 			}
 
-            // Flee first
-            float closeDistance = 99999.0f;
-            AIIndividual closeUnit = null;
-            foreach(AIIndividual unit in group.enemyUnits)
+            // Enemy
+            closeEnemyDistance = 999999.0f;
+            closeEnemyUnit = null;
+            foreach (AIIndividual unit in group.enemyUnits)
 			{
-                if (!unit)
-				{
-                    Debug.Log("Null");
-				}
                 if (unit.isDefeated)
 				{
                     continue;
 				}
 
                 float distance = (transform.position - unit.transform.position).magnitude;
-                if (false && distance <= rangePerception && distance < closeDistance)
+                if (distance <= rangePerception && distance < closeEnemyDistance)
 				{
-                    closeDistance = distance;
-                    closeUnit = unit;
+                    closeEnemyDistance = distance;
+                    closeEnemyUnit = unit;
 				}
             }
 
-            if (closeUnit != null)
-			{
-                targetUnit = closeUnit;
-                requestBehavior = EBehaviorType.Flee; 
-			}
-            else if (behavior == EBehaviorType.Flee)
-			{
-                targetUnit = null;
-                requestBehavior = EBehaviorType.Wander;
-			}
-
-            // Pursue
-            closeDistance = 99999.0f;
-            closeUnit = null;
+            // Target
+            closeTargetDistance = 99999.0f;
+            closeTargetUnit = null;
             foreach (AIIndividual unit in group.targetUnits)
             {
                 if (unit.isDefeated)
@@ -98,32 +122,91 @@ namespace Domain
                 }
 
                 float distance = (transform.position - unit.transform.position).magnitude;
-                if (distance <= rangePerception && distance < closeDistance)
+                if (distance <= rangePerception && distance < closeTargetDistance)
                 {
-                    closeDistance = distance;
-                    closeUnit = unit;
+                    closeTargetDistance = distance;
+                    closeTargetUnit = unit;
                 }
             }
+        }
 
-            if (closeUnit != null)
-            {
-                if (closeDistance < rangeDefeat) 
-                {
-                    closeUnit.Defeat();
-                    return;
-                }
+        private void UpdateDecision()
+        {
 
-                if (requestBehavior != EBehaviorType.Flee)
-				{
-                    targetUnit = closeUnit;
-                    requestBehavior = EBehaviorType.Chase;
-                }
-            }
-            else if (behavior == EBehaviorType.Chase)
-            {
+            if (targetUnit && targetUnit.isDefeated)
+			{
                 targetUnit = null;
                 requestBehavior = EBehaviorType.Wander;
             }
+
+            // If there are no enemies around the unit within 5m, the speed of the unit will be set to aggressiveness, which GroupAI assigns.
+            if (closeEnemyDistance >= 5.0f)
+			{
+                steering.maxSpeed = Mathf.Min(group.aggressiveness, group.maxSpeed);
+            }
+
+            // The unit will find the closest target.
+            // The unit will chase the closest target to catch it.
+            if (closeTargetDistance < 7.5f && behavior != EBehaviorType.Chase)
+            {
+                targetUnit = closeTargetUnit;
+                requestBehavior = EBehaviorType.Chase;
+            }
+
+            // If there is an enemy in close proximity(less than 5 m), the speed of the unit will be set to the current aggressiveness speed + 2 for 2 seconds.This is called the boost speed.
+            if (closeEnemyDistance < 5.0f && behavior != EBehaviorType.Flee)
+			{
+                boostTimer = 2.0f;
+
+                // The unit will start fleeing.
+                targetUnit = closeEnemyUnit;
+                requestBehavior = EBehaviorType.Flee;
+            }
+
+            // When 2 seconds ends, the speed of the unit returns to its aggressiveness speed.
+			// The unit will continue fleeing if the enemy is still less than 7.5 m away.
+            if (behavior == EBehaviorType.Flee)
+			{
+                targetUnit = closeEnemyUnit;
+
+                float boostSpeed = 0.0f;
+                if (boostTimer > 0.0f)
+				{
+                    boostTimer -= Time.deltaTime;
+                    boostSpeed = 2.0f;
+                }
+				else 
+                {
+                    boostTimer = 0.0f;
+                    depletedTimer = 2.0f;
+                }
+
+                // The unit can get this speed increase(boost) again after 2 seconds.
+                if (depletedTimer > 0.0f)
+                {
+                    depletedTimer -= Time.deltaTime;
+                }
+                else
+                {
+                    boostTimer = 2.0f;
+                    depletedTimer = 0.0f;
+                }
+
+                steering.maxSpeed = Mathf.Min(group.aggressiveness + boostSpeed, group.maxSpeed);
+
+                // If the enemy is more than 7.5 m away, the unit stops fleeing and returns to chasing the closest enemy.
+                if (closeEnemyDistance >= 7.5f)
+				{
+                    boostTimer = 0.0f;
+                    depletedTimer = 0.0f;
+                    targetUnit = null;
+                    requestBehavior = EBehaviorType.Wander;
+                }
+            }
+
+            // Similarly, the enemy stops chasing the unit if the distance between the enemy unit is more than 7.5 m.In this case, the enemy must find the other closest target.
+            // If you want, you can also add strategies or tactics to the individual AI to create a more exciting game.
+            // The unit will avoid colliding with obstacles(see below).
         }
 
         private void UpdateBehaviour()
@@ -183,6 +266,16 @@ namespace Domain
 
         }
 
+        private void UpdateRadius()
+        {
+            Vector3 pos2D = transform.position;
+            float distance = (transform.position - deathCenter).magnitude;
+            if (distance > deathRadius)
+			{
+                Defeat();
+			}
+        }
+
         public void SetSpeed(float speed)
         {
             steering.maxSpeed = speed;
@@ -190,9 +283,8 @@ namespace Domain
 
         public void GameOver()
 		{
-            isGameOver = true;
-
             requestBehavior = EBehaviorType.Idle;
+            UpdateBehaviour();
 		}
 
         public void Defeat()
@@ -202,6 +294,13 @@ namespace Domain
             transform.position += new Vector3(0.0f, -100.0f, 0.0f);
 
             requestBehavior = EBehaviorType.Idle;
+            UpdateBehaviour();
+		}
+
+        public void SetDeathRadius(Vector3 center, float radius)
+		{
+            deathCenter = center;
+            deathRadius = radius;
 		}
 
         // Idle //
@@ -224,8 +323,22 @@ namespace Domain
         {
             debugColor = Color.green;
 
-            steering.movements.Add(new Wander());
+            wander = new Wander();
+            steering.movements.Add(wander);
             steering.movements.Add(new LookWhereYouAreGoing());
+
+            seek = new Seek();
+            seek.weight = 0.0f;
+            steering.movements.Add(seek);
+
+            CollisionAvoidance avoidance = new CollisionAvoidance();
+            avoidance.weight = 2.0f;
+            foreach (GameObject o in obstacles)
+            {
+                avoidance.avoidList.Add(o.GetComponent<AISteering>());
+            }
+            steering.movements.Add(avoidance);
+
         }
         protected void ExitWander()
         {
@@ -234,6 +347,15 @@ namespace Domain
         }
         virtual protected void UpdateWander()
         {
+            float distance = (transform.position - deathCenter).magnitude;
+            float clampDistance = Mathf.Clamp(distance, deathRadius - 10.0f, deathRadius);
+            float distanceRatio = (clampDistance - (deathRadius - 10.0f)) / 10.0f;
+            seek.weight = distanceRatio * 2.0f;
+
+            if (seek.weight > 0.5f)
+            {
+                wander.lastWanderDirection = (deathCenter - transform.position).normalized;
+            }
         }
 
         // Idle //
@@ -248,6 +370,10 @@ namespace Domain
 
             //steering.movements.Add(new Flee());
             steering.movements.Add(new Evade());
+
+            seek = new Seek();
+            seek.weight = 0.0f;
+            steering.movements.Add(seek);
         }
         protected void ExitFlee()
         {
@@ -256,13 +382,22 @@ namespace Domain
         }
         virtual protected void UpdateFlee()
         {
+            float distance = (transform.position - deathCenter).magnitude;
+            float clampDistance = Mathf.Clamp(distance, deathRadius - 10.0f, deathRadius);
+            float distanceRatio = (clampDistance - (deathRadius - 5.0f)) / 10.0f;
+            seek.weight = distanceRatio * 2.0f;
         }
 
         // Idle //
         protected void EnterChase()
         {
             debugColor = Color.red;
-        
+
+            if (targetUnit != null)
+            {
+                steering.trackedTarget = targetUnit.GetComponent<AISteering>();
+            }
+
             steering.movements.Add(new Pursue());
             steering.movements.Add(new LookWhereYouAreGoing());
         }
@@ -275,6 +410,23 @@ namespace Domain
         {
         }
 
+        void OnCollisionEnter(Collision collision)
+        {
+            if (collision.gameObject.tag == "Obstacle")
+			{
+                Defeat();
+            }
+
+            AIIndividual unit = collision.gameObject.GetComponent<AIIndividual>();
+            if (unit && group.enemyUnits.Contains(unit))
+            {
+                unit.Defeat();
+                if (behavior == EBehaviorType.Chase)
+                {
+                    requestBehavior = EBehaviorType.Wander;
+				}
+            }
+        }
 
         public void DebugDraw()
         {

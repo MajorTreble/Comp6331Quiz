@@ -6,12 +6,12 @@ namespace AI
 {
     public class AISteering : MonoBehaviour
     {
+        //public Rigidbody rigidbody;
 
         public float initialMaxSpeed;
         public float maxSpeed;
-        public float maxDegreesDelta;
         public float rotationSpeed = 1.0f;
-        public float radius = 2.0f;
+        public float radius = 1.0f;
         public bool lockY = true;
         public bool debug = true;
 
@@ -98,7 +98,8 @@ namespace AI
                 transform.rotation = Quaternion.Slerp(transform.rotation, transform.rotation * rotation, rotationSpeed * Time.deltaTime);
             }
 
-            transform.position += Velocity * Time.deltaTime;
+            //transform.position += Velocity * Time.deltaTime;
+            GetComponent<Rigidbody>().MovePosition(transform.position + Velocity * Time.deltaTime);
         }
 
         private void GetKinematicAvg(out Vector3 kinematicAvg, out Quaternion rotation)

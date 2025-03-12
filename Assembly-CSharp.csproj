@@ -56,6 +56,8 @@
     <Analyzer Include="C:\Program Files (x86)\Microsoft Visual Studio\2019\Professional\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\Domain\AIIndividual.cs" />
+    <Compile Include="Assets\Scripts\Domain\FactionRelation.cs" />
     <Compile Include="Assets\Scripts\AI\FaceAway.cs" />
     <Compile Include="Assets\Scripts\AI\AIMovement.cs" />
     <Compile Include="Assets\Scripts\AI\Seek.cs" />
@@ -65,16 +67,14 @@
     <Compile Include="Assets\Scripts\Debug\DebugUtil.cs" />
     <Compile Include="Assets\Scripts\AI\Evade.cs" />
     <Compile Include="Assets\Scripts\Controller\MenuController.cs" />
+    <Compile Include="Assets\Scripts\Domain\AIGroup.cs" />
     <Compile Include="Assets\Scripts\AI\Pursue.cs" />
+    <Compile Include="Assets\Scripts\Domain\GameManager.cs" />
     <Compile Include="Assets\Scripts\AI\Arrive.cs" />
     <Compile Include="Assets\Scripts\AI\AISteering.cs" />
     <Compile Include="Assets\Scripts\AI\SteeringOutput.cs" />
     <Compile Include="Assets\Scripts\Controller\SimpleCameraController.cs" />
     <Compile Include="Assets\Scripts\AI\Wander.cs" />
-    <Compile Include="Assets\Scripts\Domain\GameManager.cs" />
-    <Compile Include="Assets\Scripts\Domain\FactionRelation.cs" />
-    <Compile Include="Assets\Scripts\Domain\AIIndividual.cs" />
-    <Compile Include="Assets\Scripts\Domain\AIGroup.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
@@ -647,38 +647,48 @@
     <Reference Include="System.Xml.Serialization">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2020.3.48f1\Editor\Data\NetStandard\compat\2.0.0\shims\netfx\System.Xml.Serialization.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.VSCode.Editor">
-      <HintPath>Library\ScriptAssemblies\Unity.VSCode.Editor.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.TextMeshPro.Editor">
-      <HintPath>Library\ScriptAssemblies\Unity.TextMeshPro.Editor.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.VisualStudio.Editor">
-      <HintPath>Library\ScriptAssemblies\Unity.VisualStudio.Editor.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.Timeline.Editor">
-      <HintPath>Library\ScriptAssemblies\Unity.Timeline.Editor.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.Timeline">
-      <HintPath>Library\ScriptAssemblies\Unity.Timeline.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.TextMeshPro">
-      <HintPath>Library\ScriptAssemblies\Unity.TextMeshPro.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEditor.UI">
-      <HintPath>Library\ScriptAssemblies\UnityEditor.UI.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.PlasticSCM.Editor">
-      <HintPath>Library\ScriptAssemblies\Unity.PlasticSCM.Editor.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.Rider.Editor">
-      <HintPath>Library\ScriptAssemblies\Unity.Rider.Editor.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UI">
-      <HintPath>Library\ScriptAssemblies\UnityEngine.UI.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="Unity.VSCode.Editor.csproj">
+      <Project>{A6CBD5C2-D5EE-B718-3705-126EF0986187}</Project>
+      <Name>Unity.VSCode.Editor</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.TextMeshPro.Editor.csproj">
+      <Project>{C3DAA9A3-721C-68C0-1C78-21E9F5A17DA7}</Project>
+      <Name>Unity.TextMeshPro.Editor</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.VisualStudio.Editor.csproj">
+      <Project>{9358001D-A33E-9F28-D8E5-444B15EF58E6}</Project>
+      <Name>Unity.VisualStudio.Editor</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.Timeline.Editor.csproj">
+      <Project>{C85F153C-21A8-2E0E-76E6-B40962D0EF54}</Project>
+      <Name>Unity.Timeline.Editor</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.Timeline.csproj">
+      <Project>{C5C8B4CD-2AFC-C9DB-76AD-06B94F23844E}</Project>
+      <Name>Unity.Timeline</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.TextMeshPro.csproj">
+      <Project>{10F190A5-6120-6048-2196-F5E7C48EB4F1}</Project>
+      <Name>Unity.TextMeshPro</Name>
+    </ProjectReference>
+    <ProjectReference Include="UnityEditor.UI.csproj">
+      <Project>{5763E5D6-8149-A7B1-67DD-71B2BE67BE61}</Project>
+      <Name>UnityEditor.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.PlasticSCM.Editor.csproj">
+      <Project>{57AFA985-1FB1-9FA7-BCE9-12AF9773918E}</Project>
+      <Name>Unity.PlasticSCM.Editor</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.Rider.Editor.csproj">
+      <Project>{CB864CC7-121D-637C-4EEF-CFB11DD20C61}</Project>
+      <Name>Unity.Rider.Editor</Name>
+    </ProjectReference>
+    <ProjectReference Include="UnityEngine.UI.csproj">
+      <Project>{8207FBC5-2795-EBE9-FE3C-C0071DB777EC}</Project>
+      <Name>UnityEngine.UI</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

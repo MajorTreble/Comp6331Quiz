@@ -15,6 +15,7 @@ TagManager:
   - Papers
   - Lizards
   - Spocks
+  - Obstacle
   layers:
   - Default
   - TransparentFX

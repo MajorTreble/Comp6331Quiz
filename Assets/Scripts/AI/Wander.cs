@@ -10,7 +10,7 @@ namespace AI
 
         public float wanderRadius = 10;
 
-        private Vector3 lastWanderDirection;
+        public Vector3 lastWanderDirection;
         private Vector3 lastWanderVelocity;
 
         Vector3 debugCenter = Vector3.zero;
