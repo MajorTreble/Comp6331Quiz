@@ -75,6 +75,7 @@
     <Compile Include="Assets\Scripts\BehaviorTree\Node.cs" />
     <Compile Include="Assets\Scripts\Controller\MenuController.cs" />
     <Compile Include="Assets\Scripts\Domain\AIGroup.cs" />
+    <Compile Include="Assets\Scripts\Domain\UnitBT.cs" />
     <Compile Include="Assets\Scripts\AI\Pursue.cs" />
     <Compile Include="Assets\Scripts\Domain\GameManager.cs" />
     <Compile Include="Assets\Scripts\AI\Arrive.cs" />
@@ -82,7 +83,6 @@
     <Compile Include="Assets\Scripts\AI\SteeringOutput.cs" />
     <Compile Include="Assets\Scripts\Controller\SimpleCameraController.cs" />
     <Compile Include="Assets\Scripts\AI\Wander.cs" />
-    <Compile Include="Assets\Scripts\Domain\UnitBT.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

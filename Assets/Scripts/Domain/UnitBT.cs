@@ -14,7 +14,7 @@ public class UnitBT : Tree
             //new Sequence(new List<Node>
             //{
             //}),
-            new TaskWander(unit)
+            //new TaskWander(unit)
         });
 
         return root;

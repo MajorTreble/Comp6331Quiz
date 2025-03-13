@@ -32,6 +32,9 @@ namespace Domain
         public float closeTargetDistance = 99999.0f;
         public AIIndividual closeTargetUnit = null;
 
+        public float closeFriendDistance = 99999.0f;
+        public AIIndividual closeFriendUnit = null;
+
         public AIIndividual targetUnit = null;
 
         public float boostTimer = 0;
@@ -130,6 +133,24 @@ namespace Domain
                     closeTargetUnit = unit;
                 }
             }
+
+            // Target
+            closeFriendDistance = 99999.0f;
+            closeFriendUnit = null;
+            foreach (AIIndividual unit in group.targetUnits)
+            {
+                if (unit.isDefeated)
+                {
+                    continue;
+                }
+
+                float distance = (transform.position - unit.transform.position).magnitude;
+                if (distance <= rangePerception && distance < closeFriendDistance)
+                {
+                    closeFriendDistance = distance;
+                    closeFriendUnit = unit;
+                }
+            }
         }
 
         private void UpdateDecision()
@@ -165,8 +186,18 @@ namespace Domain
                 requestBehavior = EBehaviorType.Flee;
             }
 
+            // New: If their is a nearby friend with a target
+            if (closeFriendDistance < 10.0f && behavior == EBehaviorType.Wander 
+                && requestBehavior != EBehaviorType.Flee && requestBehavior != EBehaviorType.Chase
+                && closeFriendUnit.targetUnit != null)
+            {
+                // The unit will start fleeing.
+                targetUnit = closeFriendUnit.targetUnit;
+                requestBehavior = EBehaviorType.Chase;
+            }
+
             // When 2 seconds ends, the speed of the unit returns to its aggressiveness speed.
-			// The unit will continue fleeing if the enemy is still less than 7.5 m away.
+            // The unit will continue fleeing if the enemy is still less than 7.5 m away.
             if (behavior == EBehaviorType.Flee)
 			{
                 targetUnit = closeEnemyUnit;
@@ -420,7 +451,7 @@ namespace Domain
             }
 
             AIIndividual unit = collision.gameObject.GetComponent<AIIndividual>();
-            if (unit && group.enemyUnits.Contains(unit))
+            if (unit && group.targetUnits.Contains(unit))
             {
                 unit.Defeat();
                 if (behavior == EBehaviorType.Chase)

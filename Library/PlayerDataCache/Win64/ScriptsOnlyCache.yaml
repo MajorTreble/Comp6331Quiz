@@ -7,6 +7,7 @@ ScriptsOnlyBuild:
     - Domain.AIIndividual
     - Domain.FactionRelation
     - Domain.GameManager
+    - UnitBT
     - UnityTemplateProjects.SimpleCameraController
     Unity.Rider.Editor.dll:
     - Packages.Rider.Editor.UnitTesting.CallbackData
@@ -55,33 +56,35 @@ ScriptsOnlyBuild:
     - Class: 108
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 1578}
+      Script: {instanceID: 1514}
     - Class: 114
-      Script: {instanceID: 1614}
+      Script: {instanceID: 1550}
     - Class: 114
-      Script: {instanceID: 1942}
+      Script: {instanceID: 1882}
     - Class: 114
-      Script: {instanceID: 2446}
+      Script: {instanceID: 2390}
     - Class: 114
-      Script: {instanceID: 2950}
+      Script: {instanceID: 2898}
     - Class: 114
-      Script: {instanceID: 3088}
+      Script: {instanceID: 3038}
     - Class: 114
-      Script: {instanceID: 3148}
+      Script: {instanceID: 3098}
     - Class: 114
-      Script: {instanceID: 3164}
+      Script: {instanceID: 3114}
     - Class: 114
-      Script: {instanceID: 3462}
+      Script: {instanceID: 3250}
     - Class: 114
-      Script: {instanceID: 3466}
+      Script: {instanceID: 3414}
     - Class: 114
-      Script: {instanceID: 3816}
+      Script: {instanceID: 3418}
     - Class: 114
-      Script: {instanceID: 3860}
+      Script: {instanceID: 3768}
     - Class: 114
-      Script: {instanceID: 3952}
+      Script: {instanceID: 3812}
     - Class: 114
-      Script: {instanceID: 3982}
+      Script: {instanceID: 3904}
+    - Class: 114
+      Script: {instanceID: 3934}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -121,7 +124,7 @@ ScriptsOnlyBuild:
     className: ContentSizeFitter
   - hash:
       serializedVersion: 2
-      Hash: 06f5d79bcaca644b175715207eae3f6a
+      Hash: c770f3e0b76435efc32937ff5f1471e1
     assemblyName: Assembly-CSharp.dll
     namespaceName: Domain
     className: AIIndividual
@@ -427,6 +430,12 @@ ScriptsOnlyBuild:
     className: TMP_SubMeshUI
   - hash:
       serializedVersion: 2
+      Hash: 2c9f2a133e79d65eae0cf5f21a407e1f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: UnitBT
+  - hash:
+      serializedVersion: 2
       Hash: fd68d84f33fad85aac38f2739c0ee270
     assemblyName: Unity.TextMeshPro.dll
     namespaceName: TMPro
@@ -445,7 +454,7 @@ ScriptsOnlyBuild:
     className: GraphicRaycaster
   - hash:
       serializedVersion: 2
-      Hash: 26ff040c121d75f957d918067911d0bf
+      Hash: 45383cd885b6e02a3398f2267ae35a14
     assemblyName: Assembly-CSharp.dll
     namespaceName: Domain
     className: GameManager
